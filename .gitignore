@@ -1,4 +1,5 @@
 logs
+conf/silhouette.conf
 project/project
 project/target
 target
