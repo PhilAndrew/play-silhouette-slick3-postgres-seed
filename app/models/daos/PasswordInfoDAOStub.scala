@@ -3,7 +3,7 @@ package models.daos
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.util.PasswordInfo
 import com.mohiva.play.silhouette.impl.daos.DelegableAuthInfoDAO
-import models.daos.PasswordInfoDAO._
+import models.daos.PasswordInfoDAOStub._
 import play.api.libs.concurrent.Execution.Implicits._
 
 import scala.collection.mutable
@@ -12,7 +12,7 @@ import scala.concurrent.Future
 /**
  * The DAO to store the password information.
  */
-class PasswordInfoDAO extends DelegableAuthInfoDAO[PasswordInfo] {
+class PasswordInfoDAOStub extends DelegableAuthInfoDAO[PasswordInfo] {
 
   /**
    * Finds the auth info which is linked with the specified login info.
@@ -80,7 +80,7 @@ class PasswordInfoDAO extends DelegableAuthInfoDAO[PasswordInfo] {
 /**
  * The companion object.
  */
-object PasswordInfoDAO {
+object PasswordInfoDAOStub {
 
   /**
    * The data store for the password info.

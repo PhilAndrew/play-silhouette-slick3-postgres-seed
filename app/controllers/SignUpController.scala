@@ -53,11 +53,10 @@ class SignUpController @Inject() (
           case None =>
             val authInfo = passwordHasher.hash(data.password)
             val user = User(
-              userID = UUID.randomUUID(),
+              userID = None,
               loginInfo = loginInfo,
               firstName = Some(data.firstName),
               lastName = Some(data.lastName),
-              fullName = Some(data.firstName + " " + data.lastName),
               email = Some(data.email),
               avatarURL = None
             )

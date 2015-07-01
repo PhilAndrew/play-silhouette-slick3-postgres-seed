@@ -48,17 +48,15 @@ class UserServiceImpl @Inject() (userDAO: UserDAO) extends UserService {
         userDAO.save(user.copy(
           firstName = profile.firstName,
           lastName = profile.lastName,
-          fullName = profile.fullName,
           email = profile.email,
           avatarURL = profile.avatarURL
         ))
       case None => // Insert a new user
         userDAO.save(User(
-          userID = UUID.randomUUID(),
+          userID = None,
           loginInfo = profile.loginInfo,
           firstName = profile.firstName,
           lastName = profile.lastName,
-          fullName = profile.fullName,
           email = profile.email,
           avatarURL = profile.avatarURL
         ))
