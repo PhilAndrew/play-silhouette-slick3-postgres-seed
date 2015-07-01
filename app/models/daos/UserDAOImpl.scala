@@ -14,7 +14,7 @@ import play.api.db.slick.HasDatabaseConfig
 import slick.driver.JdbcProfile
 import scala.collection.mutable
 import scala.util.Failure
-import models.daos.UserDAOImpl.{PasswordInfoRow, LoginInfoRow, UserRow}
+import models.daos.UserDAOImpl.{LoginInfoRow, UserRow}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import scala.concurrent.Future
@@ -141,13 +141,11 @@ object UserDAOImpl  extends HasDatabaseConfig[JdbcProfile] {
   case class UserRow(userID: Option[Long],firstName: String,lastName: String,email: String,avatarURL: Option[String])
   case class LoginInfoRow(id : Option[Long], providerId : String,providerKey : String)
   case class UserLoginInfoRow(userID : Long, loginInfoId : Long)
-  case class PasswordInfoRow(hasher : String, password : String,salt :  Option[String], loginInfoId : Long)
-
 
   val Users = TableQuery[UsersTable]
   val LoginInfos = TableQuery[LoginInfosTable]
   val UserLoginInfos= TableQuery[UserLoginInfosTable]
-  val PasswordInfos = TableQuery[PasswordInfosTable]
+
 
   def UserRowToUser(row : UserRow, loginInfo : LoginInfo) : User = {
     User(row.userID,loginInfo,Some(row.firstName),Some(row.lastName),Some(row.email),row.avatarURL)
@@ -179,14 +177,6 @@ object UserDAOImpl  extends HasDatabaseConfig[JdbcProfile] {
     def userID = column[Long]("user_id")
     def loginInfoId = column[Long]("logininfo_id")
     def * = (userID, loginInfoId) <> (UserLoginInfoRow.tupled,UserLoginInfoRow.unapply _)
-  }
-
-  class PasswordInfosTable(tag: Tag) extends Table[PasswordInfoRow](tag, "users_passwordinfo") {
-    def hasher = column[String]("hasher")
-    def password = column[String]("password")
-    def salt = column[Option[String]]("salt")
-    def loginInfoId = column[Long]("logininfo_id", O.PrimaryKey)
-    def * = (hasher, password, salt, loginInfoId) <> (PasswordInfoRow.tupled,PasswordInfoRow.unapply _)
   }
 
 }
