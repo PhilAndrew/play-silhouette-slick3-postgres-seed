@@ -78,13 +78,31 @@ class UserDAOImpl extends UserDAO with HasDatabaseConfig[JdbcProfile] {
       case None =>   Future.successful(None)
     }
   }
+
+  /**
+   * Finds a user by its user email.
+   *
+   * @param email The email of the user to find.
+   * @return The found user or None if no user for the given email could be found.
+   */
+  def find(email: String) = {
+    db.run(Users.filter(_.email === email).result.headOption).mapTo[Option[UserRow]].flatMap{
+      case Some(user) => findLoginInfo(user.userID.get).mapTo[Option[LoginInfo]].flatMap {
+        case Some(loginInfo) => Future.successful(Some(UserRowToUser(user,loginInfo)))
+        case None => Future.successful(None)
+      }
+      case None =>   Future.successful(None)
+    }
+  }
+
+
   /**
    * Saves a user.
    *
    * @param user The user to save.
    * @return The saved user.
    */
-  def save(user: User) = {
+  def save(user: User) =
     user.userID match {
       case Some(id) => db.run(Users.filter(_.id === id).update(UserToUserRow(user))).mapTo[Integer].flatMap {
         updated =>
@@ -96,10 +114,10 @@ class UserDAOImpl extends UserDAO with HasDatabaseConfig[JdbcProfile] {
       }
       case None => create(user)
     }
-  }
+
 
   /**
-   * Saves a loginInfo.
+   * Saves a loginInfo. If the user iD is undefined, creates a new user.
    *
    * @param loginInfo The loginInfo to save.
    * @return The saved loginInfo.

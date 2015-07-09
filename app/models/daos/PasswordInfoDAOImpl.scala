@@ -53,7 +53,6 @@ class PasswordInfoDAOImpl extends DelegableAuthInfoDAO[PasswordInfo]  with HasDa
         _ => Future.successful(authInfo)
       }
       case None =>
-        //TODO LOG ERROR
         Future.successful(authInfo)
     }
   }

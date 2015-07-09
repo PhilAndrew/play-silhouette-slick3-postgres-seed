@@ -25,11 +25,11 @@ import scala.concurrent.Future
  * @param socialProviderRegistry The social provider registry.
  */
 class SocialAuthController @Inject() (
-  val messagesApi: MessagesApi,
-  val env: Environment[User, CookieAuthenticator],
-  userService: UserService,
-  authInfoRepository: AuthInfoRepository,
-  socialProviderRegistry: SocialProviderRegistry)
+                                       val messagesApi: MessagesApi,
+                                       val env: Environment[User, CookieAuthenticator],
+                                       userService: UserService,
+                                       authInfoRepository: AuthInfoRepository,
+                                       socialProviderRegistry: SocialProviderRegistry)
   extends Silhouette[User, CookieAuthenticator] with Logger {
 
   /**
@@ -43,17 +43,31 @@ class SocialAuthController @Inject() (
       case Some(p: SocialProvider with CommonSocialProfileBuilder) =>
         p.authenticate().flatMap {
           case Left(result) => Future.successful(result)
-          case Right(authInfo) => for {
-            profile <- p.retrieveProfile(authInfo)
-            user <- userService.save(profile)
-            authInfo <- authInfoRepository.save(profile.loginInfo, authInfo)
-            authenticator <- env.authenticatorService.create(profile.loginInfo)
-            value <- env.authenticatorService.init(authenticator)
-            result <- env.authenticatorService.embed(value, Redirect(routes.ApplicationController.index()))
-          } yield {
-            env.eventBus.publish(LoginEvent(user, request, request2Messages))
-            result
-          }
+          case Right(authInfo) =>
+            p.retrieveProfile(authInfo).flatMap { profile =>
+              userService.find(profile.email.getOrElse("")).flatMap{
+                case Some(user) =>  for {
+                  authInfo <- authInfoRepository.save(profile.loginInfo, authInfo)
+                  authenticator <- env.authenticatorService.create(user.loginInfo)
+                  value <- env.authenticatorService.init(authenticator)
+                  result <- env.authenticatorService.embed(value, Redirect(routes.ApplicationController.index()))
+                } yield {
+                    env.eventBus.publish(LoginEvent(user, request, request2Messages))
+                    result
+                  }
+                case None =>
+                  for {
+                    user <- userService.save(profile)
+                    authInfo <- authInfoRepository.save(profile.loginInfo, authInfo)
+                    authenticator <- env.authenticatorService.create(profile.loginInfo)
+                    value <- env.authenticatorService.init(authenticator)
+                    result <- env.authenticatorService.embed(value, Redirect(routes.ApplicationController.index()))
+                  } yield {
+                    env.eventBus.publish(LoginEvent(user, request, request2Messages))
+                    result
+                  }
+              }
+            }
         }
       case _ => Future.failed(new ProviderException(s"Cannot authenticate with unexpected social provider $provider"))
     }).recover {

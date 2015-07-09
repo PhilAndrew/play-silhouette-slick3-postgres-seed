@@ -1,8 +1,6 @@
 package controllers
 
-import java.util.UUID
 import javax.inject.Inject
-
 import com.mohiva.play.silhouette.api._
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.services.AvatarService
@@ -29,12 +27,12 @@ import scala.concurrent.Future
  * @param passwordHasher The password hasher implementation.
  */
 class SignUpController @Inject() (
-  val messagesApi: MessagesApi,
-  val env: Environment[User, CookieAuthenticator],
-  userService: UserService,
-  authInfoRepository: AuthInfoRepository,
-  avatarService: AvatarService,
-  passwordHasher: PasswordHasher)
+                                   val messagesApi: MessagesApi,
+                                   val env: Environment[User, CookieAuthenticator],
+                                   userService: UserService,
+                                   authInfoRepository: AuthInfoRepository,
+                                   avatarService: AvatarService,
+                                   passwordHasher: PasswordHasher)
   extends Silhouette[User, CookieAuthenticator] {
 
   /**
@@ -51,26 +49,30 @@ class SignUpController @Inject() (
           case Some(user) =>
             Future.successful(Redirect(routes.ApplicationController.signUp()).flashing("error" -> Messages("user.exists")))
           case None =>
-            val authInfo = passwordHasher.hash(data.password)
-            val user = User(
-              userID = None,
-              loginInfo = loginInfo,
-              firstName = Some(data.firstName),
-              lastName = Some(data.lastName),
-              email = Some(data.email),
-              avatarURL = None
-            )
-            for {
-              avatar <- avatarService.retrieveURL(data.email)
-              user <- userService.save(user.copy(avatarURL = avatar))
-              authInfo <- authInfoRepository.add(loginInfo, authInfo)
-              authenticator <- env.authenticatorService.create(loginInfo)
-              value <- env.authenticatorService.init(authenticator)
-              result <- env.authenticatorService.embed(value, Redirect(routes.ApplicationController.index()))
-            } yield {
-              env.eventBus.publish(SignUpEvent(user, request, request2Messages))
-              env.eventBus.publish(LoginEvent(user, request, request2Messages))
-              result
+            userService.find(data.email).flatMap{
+              case Some(user) => Future.successful(Redirect(routes.ApplicationController.signUp()).flashing("error" -> Messages("user.existsWithSocialLogin")))
+              case None =>
+                val authInfo = passwordHasher.hash(data.password)
+                val user = User(
+                  userID = None,
+                  loginInfo = loginInfo,
+                  firstName = Some(data.firstName),
+                  lastName = Some(data.lastName),
+                  email = Some(data.email),
+                  avatarURL = None
+                )
+                for {
+                  avatar <- avatarService.retrieveURL(data.email)
+                  user <- userService.save(user.copy(avatarURL = avatar))
+                  authInfo <- authInfoRepository.add(loginInfo, authInfo)
+                  authenticator <- env.authenticatorService.create(loginInfo)
+                  value <- env.authenticatorService.init(authenticator)
+                  result <- env.authenticatorService.embed(value, Redirect(routes.ApplicationController.index()))
+                } yield {
+                  env.eventBus.publish(SignUpEvent(user, request, request2Messages))
+                  env.eventBus.publish(LoginEvent(user, request, request2Messages))
+                  result
+                }
             }
         }
       }

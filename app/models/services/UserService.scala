@@ -20,6 +20,14 @@ trait UserService extends IdentityService[User] {
   def save(user: User): Future[User]
 
   /**
+   * find user by email.
+   *
+   * @param email The user to save.
+   * @return The saved user.
+   */
+  def find(email: String): Future[Option[User]]
+
+  /**
    * Saves the social profile for a user.
    *
    * If a user exists for this profile then update the user, otherwise create a new user with the given profile.

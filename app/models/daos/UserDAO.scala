@@ -27,6 +27,14 @@ trait UserDAO {
   def find(userID: Long): Future[Option[User]]
 
   /**
+   * Finds a user by its user email.
+   *
+   * @param email The email of the user to find.
+   * @return The found user or None if no user for the given email could be found.
+   */
+  def find(email: String): Future[Option[User]]
+
+  /**
    * Saves a user.
    *
    * @param user The user to save.
