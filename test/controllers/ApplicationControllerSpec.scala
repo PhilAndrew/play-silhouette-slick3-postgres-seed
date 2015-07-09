@@ -69,11 +69,10 @@ class ApplicationControllerSpec extends PlaySpecification with Mockito {
      * An identity.
      */
     val identity = User(
-      userID = UUID.randomUUID(),
+      userID = Some(1),
       loginInfo = LoginInfo("facebook", "user@facebook.com"),
       firstName = None,
       lastName = None,
-      fullName = None,
       email = None,
       avatarURL = None
     )
