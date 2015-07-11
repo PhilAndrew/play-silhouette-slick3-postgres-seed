@@ -1,5 +1,7 @@
-Silhouette Seed Template
+Silhouette Seed Postgres Template
 =====================================
+
+This seed adds Postgres support.
 
 The Silhouette Seed project is an Activator template which shows how [Silhouette](https://github.com/mohiva/play-silhouette) can be implemented in a Play Framework application. It's a starting point which can be extended to fit your needs.
 
