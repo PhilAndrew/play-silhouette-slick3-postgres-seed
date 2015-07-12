@@ -1,6 +1,6 @@
 import scalariform.formatter.preferences._
 
-name := "play-silhouette-seed"
+name := "play-silhouette-seed-postgres"
 
 version := "3.0.0-RC1"
 

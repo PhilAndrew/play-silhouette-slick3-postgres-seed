@@ -1,12 +1,12 @@
 {
-  "name": "play-silhouette-seed",
+  "name": "play-silhouette-seed-postgres",
   "description": "Seed project to show how Silhouette can be implemented into a Play Framework application.",
   "keywords": [
     "Play",
     "Silhouette"
   ],
-  "website": "https://github.com/mohiva/play-silhouette-seed",
-  "repository": "https://github.com/mohiva/play-silhouette-seed",
+  "website": "https://github.com/PhilAndrew/play-silhouette-slick3-postgres-seed",
+  "repository": "https://github.com/PhilAndrew/play-silhouette-slick3-postgres-seed",
   "success_url": "/",
   "env": {
     "BUILDPACK_URL": "https://github.com/heroku/heroku-buildpack-scala.git",
