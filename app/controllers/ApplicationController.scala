@@ -18,10 +18,7 @@ import scala.concurrent.Future
  * @param env The Silhouette environment.
  * @param socialProviderRegistry The social provider registry.
  */
-class ApplicationController @Inject() (
-  val messagesApi: MessagesApi,
-  val env: Environment[User, CookieAuthenticator],
-  socialProviderRegistry: SocialProviderRegistry)
+class ApplicationController @Inject() (val messagesApi: MessagesApi, val env: Environment[User, CookieAuthenticator], socialProviderRegistry: SocialProviderRegistry)
   extends Silhouette[User, CookieAuthenticator] {
 
   /**
@@ -30,7 +27,7 @@ class ApplicationController @Inject() (
    * @return The result to display.
    */
   def index = SecuredAction.async { implicit request =>
-    Future.successful(Ok(views.html.home(request.identity)))
+    Future.successful(Ok(views.html.account(request.identity)))
   }
 
   /**

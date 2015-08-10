@@ -1,48 +1,62 @@
-@(signInForm: Form[forms.SignInForm.Data], socialProviders: com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry)(implicit request: RequestHeader, messages: Messages)
+@(signInForm: Form[forms.SignInForm.Data], socialProviders: com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry)(implicit request: RequestHeader, lang: Lang, messages: Messages)
 
 @import com.mohiva.play.silhouette.impl.providers.oauth2.ClefProvider
-@import b3.inline.fieldConstructor
+@import views.html.helper.semantic.form._
 
-@main("Silhouette - Sign In") {
-    @request.flash.get("error").map { msg =>
-        <div class="col-md-6 col-md-offset-3 alert alert-danger alert-error">
-            <a href="#" class="close" data-dismiss="alert">&times;</a>
-            <strong>Error!</strong> @msg
+@main(Messages("signin")) {
+    <div class="ui two column centered grid">
+        <div class="column">
+            <div class="ui message">
+                <p>
+                @signIn()
+                </p>
+            </div>
         </div>
-    }
-    <fieldset class="col-md-6 col-md-offset-3">
-        <legend>Sign in with your credentials</legend>
-        @helper.form(action = routes.CredentialsAuthController.authenticate()) {
+    </div>
+
+}
+
+@message() = {
+@request.flash.get("error").map { msg =>
+    <div class="ui error message">
+        <div class="header">Error!</div>
+        @msg
+    </div>
+}
+}
+
+@signIn() = {
+    <form action="@routes.CredentialsAuthController.authenticate()" class="ui form" autocomplete= "off" method="POST" >
+        <fieldset>
+            <legend>@Messages("signin")</legend>
+            @message()
             @helper.CSRF.formField
-            @b3.text(signInForm("email"), '_hiddenLabel -> "Email", 'placeholder -> "Email", 'class -> "form-control input-lg")
-            @b3.password(signInForm("password"), '_hiddenLabel -> "Password", 'placeholder -> "Password", 'class -> "form-control input-lg")
-            @b3.checkbox(signInForm("rememberMe"), '_text -> "Remember my login on this computer", 'checked -> true)
-            <div class="form-group">
-                <div>
-                    <button id="submit" type="submit" value="submit" class="btn btn-lg btn-primary btn-block">Submit</button>
-                </div>
+
+            @text(signInForm("email"), Messages("email"), Messages("email.placeholder"), true)
+            @password(signInForm("password"), Messages("password"), Messages("password.placeholder"), true)
+            @checkbox(signInForm("rememberMe"), Messages("signin.remember"), "checkbox", required = false, checked = true)
+            <input id="submit" type="submit" class="ui primary button" value="@Messages("login")">
+
+            <div>
+                <p class="not-a-member">@Messages("signin.noAccount")? <a href="@routes.ApplicationController.signUp">@Messages("signin.now")</a></p>
             </div>
-        }
 
-        <div>
-            <p class="not-a-member">Not a member? <a href="@routes.ApplicationController.signUp">Sign up now</a></p>
-        </div>
-
-        @if(socialProviders.providers.nonEmpty) {
-            <div class="social-providers">
-                <p>Or use your existing account on one of the following services to sign in:</p>
-                <div>
-                @for(p <- socialProviders.providers if p.id != "clef") {
-                    <a href="@routes.SocialAuthController.authenticate(p.id)" class="provider @p.id"><img src="@routes.Assets.at(s"images/providers/${p.id}.png")" style="width:64px;height:64px;"></a>
-                }
-                </div>
-                @defining(socialProviders.get[ClefProvider]) { clef =>
-                    @if(clef.isDefined) {
-                        <script type="text/javascript" src="https://clef.io/v3/clef.js" class="clef-button" data-app-id="@clef.get.settings.clientID" data-color="blue" data-style="flat" data-redirect-url="@clef.get.settings.redirectURL" data-type="login"></script>
+            @if(socialProviders.providers.nonEmpty) {
+                <div class="social-providers">
+                    <p>@Messages("signin.existingAccounts")</p>
+                    <div>
+                    @for(p <- socialProviders.providers if p.id != "clef") {
+                        <a href="@routes.SocialAuthController.authenticate(p.id)" class="provider @p.id"><img src="@routes.Assets.at(s"images/providers/${p.id}.png")" style="width : 64 px ; height : 64 px ;"></a>
                     }
-                }
-            </div>
-        }
+                    </div>
+                    @defining(socialProviders.get[ClefProvider]) { clef =>
+                        @if(clef.isDefined) {
+                            <script type="text/javascript" src="https://clef.io/v3/clef.js" class="clef-button" data-app-id="@clef.get.settings.clientID" data-color="blue" data-style="flat" data-redirect-url="@clef.get.settings.redirectURL" data-type="login"></script>
+                        }
+                    }
+                </div>
+            }
 
-    </fieldset>
+        </fieldset>
+    </form>
 }

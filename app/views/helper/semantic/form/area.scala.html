@@ -1,0 +1,6 @@
+@(field: Field, label: String = "", required: Boolean = false)
+
+<div class="@if(required) {required }field">
+    <label for="@field.id">@label</label>
+    <textarea id="@field.id" name="@field.name">@field.value</textarea>
+</div>

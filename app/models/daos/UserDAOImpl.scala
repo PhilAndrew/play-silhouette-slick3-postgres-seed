@@ -38,11 +38,11 @@ class UserDAOImpl extends UserDAO with HasDatabaseConfig[JdbcProfile] {
   def find(loginInfo: LoginInfo) = {  db.run(LoginInfos.filter(i => i.providerKey === loginInfo.providerKey && i.providerID === loginInfo.providerID)
     .result.headOption).mapTo[Option[LoginInfoRow]].flatMap{
     case Some(loginInfoRow) => db.run(UserLoginInfos.filter(_.loginInfoId === loginInfoRow.id).result.headOption).mapTo[Option[UserLoginInfoRow]].flatMap{
-        case Some(userLoginInfoRow) =>  find(userLoginInfoRow.userID)
-        case None => Future.successful(None)
-      }
-    case None =>   Future.successful(None)
+      case Some(userLoginInfoRow) =>  find(userLoginInfoRow.userID)
+      case None => Future.successful(None)
     }
+    case None =>   Future.successful(None)
+  }
   }
 
   /**
@@ -57,7 +57,7 @@ class UserDAOImpl extends UserDAO with HasDatabaseConfig[JdbcProfile] {
         db.run(LoginInfos.filter(_.id === userLoginInfoRow.loginInfoId).result.headOption).mapTo[Option[LoginInfoRow]].flatMap{
           case Some(loginInfo) =>  Future.successful(Some(LoginInfo(loginInfo.providerId,loginInfo.providerKey)))
           case None => Future.successful(None)
-      }
+        }
       case None => Future.successful(None)
     }
   }
@@ -129,7 +129,7 @@ class UserDAOImpl extends UserDAO with HasDatabaseConfig[JdbcProfile] {
         db.run((LoginInfos returning LoginInfos.map(_.id)) += LoginInfoRow(None,loginInfo.providerID,loginInfo.providerKey)).mapTo[Long].flatMap{
           id => db.run(UserLoginInfos += UserLoginInfoRow(userId,id)).flatMap{ _ => Future.successful(loginInfo)}
         }
-      }
+    }
   }
 
   /**

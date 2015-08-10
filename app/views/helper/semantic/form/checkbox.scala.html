@@ -1,0 +1,8 @@
+@(field: Field, label: String = "", cssClass: String = "checkbox", required: Boolean = false, checked: Boolean = false)
+
+<div class="inline field">
+    <div class="ui @cssClass">
+        <input type="checkbox" id="@field.id" name="@field.name" tabindex="0" class="hidden">
+        <label for="@field.id">@label</label>
+    </div>
+</div>

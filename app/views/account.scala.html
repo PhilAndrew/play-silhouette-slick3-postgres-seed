@@ -1,0 +1,28 @@
+@(user: models.User)(implicit request: RequestHeader, lang: Lang, messages: Messages)
+
+@main(Messages("home"), Some(user)) {
+    <div class="ui two column centered grid">
+        <div class="column">
+            <div class="ui card">
+                <div class="image">
+                    <img src="@user.avatarURL.getOrElse(routes.Assets.at("images/silhouette.png"))">
+                    </div>
+                    <div class="content">
+                        <a class="header">user.fullName.getOrElse("None")</a>
+                        <div class="meta">
+                            <span class="date">Joined in 2013</span>
+                        </div>
+                        <div class="description">
+                            @Messages("welcome")!
+                        </div>
+                    </div>
+                    <div class="extra content">
+                        <a>
+                            <i class="user icon"></i>
+                            @user.email.getOrElse("None")
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }

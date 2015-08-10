@@ -5,3 +5,27 @@ access.denied = Access denied!
 user.exists = There already exists a user with this email!
 user.existsWithSocialLogin = There already exists a user with this email and social login credentials!
 could.not.authenticate = Could not authenticate with social provider! Please try again!
+
+# english with key
+
+signup=Sign up for a new account
+first=First name
+last=Last name
+email=Email
+email.placeholder=Email
+password=Password
+password.placeholder=Password
+signup.existingAccount=Already a member
+signup.signIn=Sign in now
+error=Error
+signup.create=Create account
+
+signin=Sign in
+signin.remember=Remember my login on this computer
+signin.noAccount=Not a member
+signin.now=Sign up now
+signin.existingAccounts=Or use your existing account on one of the following services to sign in:
+login=Login
+welcome=Welcome, you are now signed in
+
+signOut=Sign Out
