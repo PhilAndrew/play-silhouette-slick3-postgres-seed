@@ -22,7 +22,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-slick" % "1.0.0",
   "com.typesafe.play" %% "play-slick-evolutions" % "1.0.0",
   "org.postgresql" % "postgresql" % "9.4-1201-jdbc41",
-  "com.github.tminglei" %% "slick-pg" % "0.9.0",
+  "com.github.tminglei" %% "slick-pg" % "0.9.2",
   "com.vividsolutions" % "jts" % "1.13",
   evolutions,
   "com.h2database" % "h2" % "1.4.187",
