@@ -1,8 +1,8 @@
 @(user: models.User)(implicit request: RequestHeader, lang: Lang, messages: Messages)
 
 @main(Messages("home"), Some(user)) {
-    <div class="ui two column centered grid">
-        <div class="column">
+    <div class="ui">
+
             <div class="ui card">
                 <div class="image">
                     <img src="@user.avatarURL.getOrElse(routes.Assets.at("images/silhouette.png"))">
@@ -23,6 +23,6 @@
                         </a>
                     </div>
                 </div>
-            </div>
+
         </div>
         }

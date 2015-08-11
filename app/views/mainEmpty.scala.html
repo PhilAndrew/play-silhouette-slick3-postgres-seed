@@ -21,8 +21,8 @@
         <script type="text/javascript" src="@routes.Assets.at("semantic/components/sidebar.js")></script>
 
         @if(useMap) {
-            <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&key=AIzaSyCwJvpznSnlzRcNqDcVQ_A4jXdHqOdLuBY"></script>
-            <script type="text/javascript">
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&key=AIzaSyCwJvpznSnlzRcNqDcVQ_A4jXdHqOdLuBY"></script>
+        <script type="text/javascript">
         var map;
         function initialize() {
           var styles = [{"featureType":"landscape","stylers":[{"hue":"#FFA800"},{"saturation":0},{"lightness":0},{"gamma":1}]},
@@ -43,7 +43,7 @@
         }
         google.maps.event.addDomListener(window, 'load', initialize);
       </script>
-        }
+    }
     </head>
     <body>
         <script type="text/javascript">
@@ -81,71 +81,10 @@
 
 
 
-            <div class="ui secondary pointing menu">
-                <a class="item active">
-                    Home
-                </a>
-                <a class="item">
-                    Messages
-                </a>
-                <a class="item">
-                    Friends
-                </a>
 
 
-                @showSignOut() = {
-                    <div class="right menu">
-                        <a class="ui item" href="@routes.ApplicationController.signOut()">
-                        @Messages("signOut")
-                        </a>
-                    </div>
+                @content
 
-                }
-
-                @userOpt.map({user => showSignOut() })
-
-            </div>
-
-            <!--
-            <nav>
-                <div class="ui large collapsible menu">
-                    <div class="container">
-
-                    @userOpt.map({user => showSignOut() })
-                    </div>
-                </div>
-
-            </nav>
--->
-
-            <div class="ui bottom attached pushable">
-
-            <div class="ui visible  left vertical sidebar menu">
-                <a class="item">
-                    <i class="home icon"></i>
-                    Home
-                </a>
-                <a class="item">
-                    <i class="block layout icon"></i>
-                    Topics
-                </a>
-                <a class="item">
-                    <i class="smile icon"></i>
-                    Friends
-                </a>
-                <a class="item">
-                    <i class="calendar icon"></i>
-                    History
-                </a>
-            </div>
-
-            <div class="pusher">
-                <div class="ui">
-                    @content
-                </div>
-            </div>
-
-            </div>
 
     </body>
 </html>
