@@ -1,6 +1,6 @@
 @(user: models.User)(implicit request: RequestHeader, lang: Lang, messages: Messages)
 
-@main(Messages("home"), Some(user)) {
+@mainInner(Messages("home"), Some(user)) {
     <div class="ui">
 
             <div class="ui card">
